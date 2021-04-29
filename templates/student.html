@@ -1,6 +1,80 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>HEYY</h1>
+<h1><center>Student Registration</center></h1>
+<br>
+<div class="container">
+    <form>
+        <div class="form-group">
+            <input type="text" class="form-control" id="name" placeholder="Enter Name">
+         
+        </div>
+        <br>
+        <div class="form-group">
+          <input type="number" id="number" class="form-control" placeholder="Enter phone number">
+        </div>
+       <br>
+        <button type="button" id="register" class="btn btn-primary">Register</button>
+      </form>
+</div>
+
+<br>
+<div class="container">
+    <h1>Student Details</h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Number</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody class="update">
+            {% for i in student_details %}
+          <tr>
+            
+            <th scope="row">{{i.id}}</th>
+            <td>{{i.name}}</td>
+            <td>{{i.number}}</td>
+            <td>@mdo</td>
+            
+          </tr>
+          {% endfor %}
+          
+        </tbody>
+      </table>
+</div>
+
+<script>
+    $('#register').click(function(){
+        //take single data from form field
+        // var name = $('#name').val()
+        // console.log(name)
+
+        //take multiple data from form field
+
+        var s_data = {
+            csrfmiddlewaretoken: '{{csrf_token}}',
+            'name':$('#name').val(),
+            'number':$('#number').val()
+        }
+    
+
+        $.ajax({
+            url: '/',
+            method: 'POST',
+            data:s_data,
+            success:function(data){
+                var datas_student = JSON.parse(data.student_create)[0]
+                console.log(datas_student.pk)
+                var html = '<tr><th scope="row">'+datas_student.pk+'</th><td>'+datas_student.fields.name+'</td><td>'+datas_student.fields.number+'</td><td>@mdo</td></tr>'
+                console.log(html)
+                $('.update').append(html)
+            }
+        })
+    })
+</script>
+
 {% endblock %}
 
